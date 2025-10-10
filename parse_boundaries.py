@@ -5,6 +5,8 @@ from pathlib import Path
 
 import polars as pl
 from shapely.geometry import shape
+from shapely.ops import transform
+from pyproj import Transformer
 
 
 def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
@@ -12,10 +14,16 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
     with open(geojson_path) as f:
         data = json.load(f)
     
+    # Equal-area projection for contiguous US; outputs meters
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:5070", always_xy=True)
+    SQ_METERS_PER_SQ_MILE = 2_589_988.110336
+
     rows = []
     for feature in data["features"]:
         props = feature["properties"]
-        geom = shape(feature["geometry"])
+        geom = shape(feature["geometry"])  # lon/lat (EPSG:4326)
+        geom_equal_area = transform(transformer.transform, geom)
+        area_sq_meters = geom_equal_area.area
         
         row = {
             "relation_id": props["@id"],
@@ -24,7 +32,8 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
             "border_type": props.get("border_type"),
             "wikidata": props.get("wikidata"),
             "wikipedia": props.get("wikipedia"),
-            "area_sq_meters": geom.area,
+            "area_sq_meters": area_sq_meters,
+            "area_sq_miles": area_sq_meters / SQ_METERS_PER_SQ_MILE,
             "coordinates": feature["geometry"]["coordinates"],
         }
         rows.append(row)

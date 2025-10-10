@@ -13,7 +13,6 @@ Usage:
 from __future__ import annotations
 
 import json
-import math
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
@@ -62,6 +61,17 @@ ENFIELD_DMS_CORNERS: list[Corner] = [
         name="Enfield–Grantham–Plainfield (W corner)",
         lat_dms="43° 34' 24.63\" N",
         lon_dms="72° 10' 10.94\" W",
+    ),
+    # TODO: decimal seconds?
+    Corner(
+        name="Enfield–Grantham",
+        lat_dms="43° 33' 12\" N",
+        lon_dms="72° 06' 24\" W",
+    ),
+    Corner(
+        name="Enfield–Grantham",
+        lat_dms="43° 32' 18\" N",
+        lon_dms="72° 07' 13\" W",
     ),
     Corner(
         name="Enfield–Springfield–Grantham (S corner)",
@@ -142,22 +152,6 @@ def iter_boundary_lines(geom: Geometry) -> Iterable[Iterable[tuple[float, float]
         yield list(boundary.coords)
     except Exception:  # pragma: no cover - defensive
         return
-
-
-def order_survey_corners(corners: list[Corner]) -> list[tuple[float, float]]:
-    """Order surveyed corners into a simple polygon loop by polar angle.
-
-    Returns a list of (lon, lat) ordered around the centroid.
-    """
-    lon_lat = [(c.lon, c.lat) for c in corners]
-    cx = sum(lon for lon, _ in lon_lat) / len(lon_lat)
-    cy = sum(lat for _, lat in lon_lat) / len(lon_lat)
-
-    def angle(p: tuple[float, float]) -> float:
-        return math.atan2(p[1] - cy, p[0] - cx)
-
-    ordered = sorted(lon_lat, key=angle)
-    return ordered
 
 
 def main() -> None:
@@ -269,13 +263,14 @@ def main() -> None:
     osm_df_pl = pl.DataFrame(osm_rows).sort(["path_id", "order"])
 
     # Build surveyed polygon path (ordered by angle and closed)
-    survey_loop = order_survey_corners(ENFIELD_DMS_CORNERS)
+    survey_loop = ENFIELD_DMS_CORNERS.copy()
     # close the ring
     if survey_loop[0] != survey_loop[-1]:
         survey_loop = [*survey_loop, survey_loop[0]]
 
     survey_rows = [
-        {"lon": lon, "lat": lat, "order": i} for i, (lon, lat) in enumerate(survey_loop)
+        {"lon": corner.lon, "lat": corner.lat, "order": i}
+        for i, corner in enumerate(survey_loop)
     ]
     survey_df_pl = pl.DataFrame(survey_rows).sort(["order"])
 

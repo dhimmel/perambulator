@@ -13,10 +13,12 @@ Usage:
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+import plotnine as pn
 import polars as pl
 from pygeodesy import dms as dms_mod
 from pyproj import Transformer
@@ -125,6 +127,39 @@ def iter_boundary_vertices(geom: Geometry) -> Iterable[tuple[float, float]]:
     yield from _iter_coords(geom)
 
 
+def iter_boundary_lines(geom: Geometry) -> Iterable[Iterable[tuple[float, float]]]:
+    """Yield each boundary line as a sequence of (lon, lat) coordinates."""
+    boundary = geom.boundary
+    if boundary.geom_type == "LineString":
+        yield list(boundary.coords)
+        return
+    if boundary.geom_type == "MultiLineString":
+        for line in boundary.geoms:
+            yield list(line.coords)
+        return
+    # Fallback: treat geometry as coordinate sequence if possible
+    try:
+        yield list(boundary.coords)
+    except Exception:  # pragma: no cover - defensive
+        return
+
+
+def order_survey_corners(corners: list[Corner]) -> list[tuple[float, float]]:
+    """Order surveyed corners into a simple polygon loop by polar angle.
+
+    Returns a list of (lon, lat) ordered around the centroid.
+    """
+    lon_lat = [(c.lon, c.lat) for c in corners]
+    cx = sum(lon for lon, _ in lon_lat) / len(lon_lat)
+    cy = sum(lat for _, lat in lon_lat) / len(lon_lat)
+
+    def angle(p: tuple[float, float]) -> float:
+        return math.atan2(p[1] - cy, p[0] - cx)
+
+    ordered = sorted(lon_lat, key=angle)
+    return ordered
+
+
 def main() -> None:
     repo_root = Path(__file__).resolve().parent
     geojson_path = repo_root / "2025-10-09_nh-boundaries.geojson"
@@ -223,6 +258,70 @@ def main() -> None:
     # Write files
     out_json = repo_root / "enfield_corner_inaccuracy.json"
     out_json.write_text(json.dumps(df.to_dicts(), indent=2) + "\n")
+
+    # ---- Plot OSM boundary vs. surveyed polygon ----
+    # Build OSM boundary dataframe
+    osm_rows: list[dict[str, float | int]] = []
+    for path_id, coords in enumerate(iter_boundary_lines(enfield_geom_wgs84)):
+        for order, (x, y) in enumerate(coords):
+            osm_rows.append({"lon": x, "lat": y, "path_id": path_id, "order": order})
+
+    osm_df_pl = pl.DataFrame(osm_rows)
+
+    # Build surveyed polygon path (ordered by angle and closed)
+    survey_loop = order_survey_corners(ENFIELD_DMS_CORNERS)
+    # close the ring
+    if survey_loop[0] != survey_loop[-1]:
+        survey_loop = [*survey_loop, survey_loop[0]]
+
+    survey_rows = [
+        {"lon": lon, "lat": lat, "order": i} for i, (lon, lat) in enumerate(survey_loop)
+    ]
+    survey_df_pl = pl.DataFrame(survey_rows)
+
+    # Points for labels
+    survey_pts_rows = [
+        {"lon": c.lon, "lat": c.lat, "label": str(i + 1)}
+        for i, c in enumerate(ENFIELD_DMS_CORNERS)
+    ]
+    survey_pts_pl = pl.DataFrame(survey_pts_rows)
+
+    # Convert to pandas for plotnine
+    osm_pd = osm_df_pl.sort(["path_id", "order"]).to_pandas()
+    survey_pd = survey_df_pl.sort(["order"]).to_pandas()
+    survey_pts_pd = survey_pts_pl.to_pandas()
+
+    p = (
+        pn.ggplot()
+        + pn.geom_path(
+            osm_pd,
+            pn.aes(x="lon", y="lat", group="path_id"),
+            color="#2563eb",
+            size=0.7,
+            alpha=0.9,
+        )
+        + pn.geom_path(
+            survey_pd, pn.aes(x="lon", y="lat"), color="#ef4444", size=1.1, alpha=0.9
+        )
+        + pn.geom_point(
+            survey_pts_pd, pn.aes(x="lon", y="lat"), color="#111827", size=1.8
+        )
+        + pn.geom_text(
+            survey_pts_pd,
+            pn.aes(x="lon", y="lat", label="label"),
+            nudge_y=0.0025,
+            size=7,
+            color="#111827",
+        )
+        + pn.coord_equal()
+        + pn.theme_void()
+        + pn.labs(title="Enfield boundary: OSM vs. surveyed corners")
+    )
+
+    out_png = repo_root / "enfield_osm_vs_survey.png"
+    # Save figure
+    p.save(filename=str(out_png), width=6, height=6, units="in", dpi=200)
+    print(f"Saved comparison figure to: {out_png}")
 
 
 if __name__ == "__main__":

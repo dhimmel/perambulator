@@ -1,0 +1,68 @@
+[
+  {
+    "corner_name": "Enfield\u2013Lebanon\u2013Plainfield (SW corner)",
+    "lat": 43.585261111111116,
+    "lon": -72.20816388888889,
+    "nearest_boundary_lat": 43.58523773327623,
+    "nearest_boundary_lon": -72.20809579425746,
+    "distance_to_boundary_m": 6.084608544676698,
+    "nearest_vertex_lat": 43.585162,
+    "nearest_vertex_lon": -72.208145,
+    "distance_to_vertex_m": 11.121550715735976
+  },
+  {
+    "corner_name": "Enfield\u2013Grantham\u2013Plainfield (W corner)",
+    "lat": 43.573508333333336,
+    "lon": -72.16970555555557,
+    "nearest_boundary_lat": 43.57354731250331,
+    "nearest_boundary_lon": -72.16968193288939,
+    "distance_to_boundary_m": 4.734418390909349,
+    "nearest_vertex_lat": 43.5740225,
+    "nearest_vertex_lon": -72.1711653,
+    "distance_to_vertex_m": 131.0777543743748
+  },
+  {
+    "corner_name": "Enfield\u2013Springfield\u2013Grantham (S corner)",
+    "lat": 43.52860277777778,
+    "lon": -72.09111944444444,
+    "nearest_boundary_lat": 43.528832370039005,
+    "nearest_boundary_lon": -72.09098763481923,
+    "distance_to_boundary_m": 27.654566366097765,
+    "nearest_vertex_lat": 43.5288092,
+    "nearest_vertex_lon": -72.0909114,
+    "distance_to_vertex_m": 28.45019058676233
+  },
+  {
+    "corner_name": "Enfield\u2013Grafton\u2013Springfield (SE corner)",
+    "lat": 43.55294444444444,
+    "lon": -72.06991111111111,
+    "nearest_boundary_lat": 43.55287782139519,
+    "nearest_boundary_lon": -72.06976780511944,
+    "distance_to_boundary_m": 13.748497048326952,
+    "nearest_vertex_lat": 43.5531897,
+    "nearest_vertex_lon": -72.0694937,
+    "distance_to_vertex_m": 43.37622214483718
+  },
+  {
+    "corner_name": "Enfield\u2013Canaan\u2013Grafton (NE corner)",
+    "lat": 43.61137777777778,
+    "lon": -72.01991944444444,
+    "nearest_boundary_lat": 43.6113809,
+    "nearest_boundary_lon": -72.02009620000001,
+    "distance_to_boundary_m": 14.278032091930644,
+    "nearest_vertex_lat": 43.6113809,
+    "nearest_vertex_lon": -72.0200962,
+    "distance_to_vertex_m": 14.278032091930644
+  },
+  {
+    "corner_name": "Enfield\u2013Lebanon\u2013Hanover\u2013Canaan (NW corner, Moose Mountain)",
+    "lat": 43.65908888888889,
+    "lon": -72.16200833333333,
+    "nearest_boundary_lat": 43.6585395074796,
+    "nearest_boundary_lon": -72.16040826117556,
+    "distance_to_boundary_m": 142.83152989704567,
+    "nearest_vertex_lat": 43.6586291,
+    "nearest_vertex_lon": -72.1603499,
+    "distance_to_vertex_m": 143.25568628733882
+  }
+]

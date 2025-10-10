@@ -2,12 +2,14 @@
 name = "nh-boundaries"
 version = "0.1.0"
 description = "Analysis of New Hampshire town boundaries"
-requires-python = ">=3.14"
+# upgrade to 3.14 when more prebuilt wheels are available
+requires-python = "==3.13"
 dependencies = [
     "pint>=0.25",
     "plotnine>=0.15.0",
     "polars>=1.34.0",
     "pre-commit>=4.3.0",
+    "pyarrow>=21.0.0",
     "pygeodesy>=25.9.9",
     "pyproj>=3.7.2",
     "shapely>=2.1.2",
@@ -36,7 +38,7 @@ ignore = [
 
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
 [tool.mypy]
-python_version = "3.14"
+python_version = "3.13"
 strict = true
 pretty = true
 show_error_context = true

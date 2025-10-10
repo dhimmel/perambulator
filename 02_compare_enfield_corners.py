@@ -266,7 +266,7 @@ def main() -> None:
         for order, (x, y) in enumerate(coords):
             osm_rows.append({"lon": x, "lat": y, "path_id": path_id, "order": order})
 
-    osm_df_pl = pl.DataFrame(osm_rows)
+    osm_df_pl = pl.DataFrame(osm_rows).sort(["path_id", "order"])
 
     # Build surveyed polygon path (ordered by angle and closed)
     survey_loop = order_survey_corners(ENFIELD_DMS_CORNERS)
@@ -277,7 +277,7 @@ def main() -> None:
     survey_rows = [
         {"lon": lon, "lat": lat, "order": i} for i, (lon, lat) in enumerate(survey_loop)
     ]
-    survey_df_pl = pl.DataFrame(survey_rows)
+    survey_df_pl = pl.DataFrame(survey_rows).sort(["order"])
 
     # Points for labels
     survey_pts_rows = [
@@ -286,28 +286,23 @@ def main() -> None:
     ]
     survey_pts_pl = pl.DataFrame(survey_pts_rows)
 
-    # Convert to pandas for plotnine
-    osm_pd = osm_df_pl.sort(["path_id", "order"]).to_pandas()
-    survey_pd = survey_df_pl.sort(["order"]).to_pandas()
-    survey_pts_pd = survey_pts_pl.to_pandas()
-
     p = (
         pn.ggplot()
         + pn.geom_path(
-            osm_pd,
+            osm_df_pl,
             pn.aes(x="lon", y="lat", group="path_id"),
             color="#2563eb",
             size=0.7,
             alpha=0.9,
         )
         + pn.geom_path(
-            survey_pd, pn.aes(x="lon", y="lat"), color="#ef4444", size=1.1, alpha=0.9
+            survey_df_pl, pn.aes(x="lon", y="lat"), color="#ef4444", size=1.1, alpha=0.9
         )
         + pn.geom_point(
-            survey_pts_pd, pn.aes(x="lon", y="lat"), color="#111827", size=1.8
+            survey_pts_pl, pn.aes(x="lon", y="lat"), color="#111827", size=1.8
         )
         + pn.geom_text(
-            survey_pts_pd,
+            survey_pts_pl,
             pn.aes(x="lon", y="lat", label="label"),
             nudge_y=0.0025,
             size=7,

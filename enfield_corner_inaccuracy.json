@@ -23,25 +23,25 @@
   },
   {
     "corner_name": "Enfield\u2013Grantham",
-    "lat": 43.553333333333335,
-    "lon": -72.10666666666667,
-    "nearest_boundary_lat": 43.55329350337787,
-    "nearest_boundary_lon": -72.10658165913723,
-    "distance_to_boundary_m": 8.17416909643099,
+    "lat": 43.55338611111111,
+    "lon": -72.10657777777777,
+    "nearest_boundary_lat": 43.553360234321595,
+    "nearest_boundary_lon": -72.10652254999736,
+    "distance_to_boundary_m": 5.3106001651671955,
     "nearest_vertex_lat": 43.5534847,
     "nearest_vertex_lon": -72.1064123,
-    "distance_to_vertex_m": 26.56740657330563
+    "distance_to_vertex_m": 17.291651911937542
   },
   {
     "corner_name": "Enfield\u2013Grantham",
-    "lat": 43.538333333333334,
-    "lon": -72.12027777777777,
-    "nearest_boundary_lat": 43.53830151731749,
-    "nearest_boundary_lon": -72.12021307350933,
-    "distance_to_boundary_m": 6.314747057328728,
+    "lat": 43.538405555555556,
+    "lon": -72.1202888888889,
+    "nearest_boundary_lat": 43.53834734106475,
+    "nearest_boundary_lon": -72.12017049793245,
+    "distance_to_boundary_m": 11.554234375016973,
     "nearest_vertex_lat": 43.5382692,
     "nearest_vertex_lon": -72.1202431,
-    "distance_to_vertex_m": 7.659788969917074
+    "distance_to_vertex_m": 15.60099823358708
   },
   {
     "corner_name": "Enfield\u2013Springfield\u2013Grantham (S corner)",

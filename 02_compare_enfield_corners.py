@@ -36,6 +36,7 @@ class Corner:
     name: str
     lat_dms: str
     lon_dms: str
+    page: int | None = None
 
     @property
     def lat(self) -> float:
@@ -56,42 +57,49 @@ ENFIELD_DMS_CORNERS: list[Corner] = [
         name="Enfield–Lebanon–Plainfield (SW corner)",
         lat_dms="43° 35' 6.94\" N",
         lon_dms="72° 12' 29.39\" W",
+        page=140,
     ),
     Corner(
         name="Enfield–Grantham–Plainfield (W corner)",
         lat_dms="43° 34' 24.63\" N",
         lon_dms="72° 10' 10.94\" W",
-    ),
-    # TODO: decimal seconds?
-    Corner(
-        name="Enfield–Grantham",
-        lat_dms="43° 33' 12\" N",
-        lon_dms="72° 06' 24\" W",
+        page=143,
     ),
     Corner(
         name="Enfield–Grantham",
-        lat_dms="43° 32' 18\" N",
-        lon_dms="72° 07' 13\" W",
+        lat_dms="43° 33' 12.19\" N",
+        lon_dms="72° 06' 23.68\" W",
+        page=129,
+    ),
+    Corner(
+        name="Enfield–Grantham",
+        lat_dms="43° 32' 18.26\" N",
+        lon_dms="72° 07' 13.04\" W",
+        page=128,
     ),
     Corner(
         name="Enfield–Springfield–Grantham (S corner)",
         lat_dms="43° 31' 42.97\" N",
         lon_dms="72° 05' 28.03\" W",
+        page=127,
     ),
     Corner(
         name="Enfield–Grafton–Springfield (SE corner)",
         lat_dms="43° 33' 10.60\" N",
         lon_dms="72° 04' 11.68\" W",
+        page=113,
     ),
     Corner(
         name="Enfield–Canaan–Grafton (NE corner)",
         lat_dms="43° 36' 40.96\" N",
         lon_dms="72° 01' 11.71\" W",
+        page=76,
     ),
     Corner(
         name="Enfield–Lebanon–Hanover–Canaan (NW corner, Moose Mountain)",
         lat_dms="43° 39' 32.72\" N",
         lon_dms="72° 09' 43.23\" W",
+        page=92,
     ),
 ]
 

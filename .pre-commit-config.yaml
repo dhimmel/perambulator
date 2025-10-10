@@ -1,0 +1,34 @@
+default_language_version:
+  python: python3.14
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: debug-statements
+      - id: detect-private-key
+      - id: end-of-file-fixer
+        # exclude is a regex and not a glob
+        exclude: src/radoverlay/backend/powerscribe/tests/test-files/.+
+      - id: mixed-line-ending
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0
+    hooks:
+      # Run the linter.
+      - id: ruff-check
+        types_or: [ python, jupyter ]
+        args: [ --fix ]
+      # Run the formatter.
+      - id: ruff-format
+        types_or: [ python, jupyter ]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        language: python  # specify language here for renovate support
+        # additional_dependencies:
+        #   - "XXX==0.118.2"

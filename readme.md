@@ -22,6 +22,13 @@ rel(area.nh)["boundary"="administrative"]["admin_level"="8"]->.rels;
 out body;
 ```
 
+## Setup
+
+```shell
+uv sync
+pre-commit install
+```
+
 ## Usage
 
 Parse the GeoJSON data:

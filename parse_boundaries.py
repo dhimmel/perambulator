@@ -50,6 +50,4 @@ if __name__ == "__main__":
     print(municipalities.select(["name", "relation_id", "border_type", "area_sq_meters"]).head(10))
     
     # Save as JSON
-    output_path = "nh_municipalities.json"
-    municipalities.write_json(output_path)
-    print(f"\nSaved to {output_path}")
+    Path("nh_municipalities.json").write_text(json.dumps(municipalities.to_dicts(), indent=2))

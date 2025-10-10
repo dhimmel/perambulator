@@ -13,16 +13,16 @@ Usage:
 from __future__ import annotations
 
 import json
-import math
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Tuple
 
 import polars as pl
-from shapely.geometry import Point, shape
-from shapely.ops import transform as shapely_transform
-from pyproj import Transformer
 from pygeodesy import dms as dms_mod
+from pyproj import Transformer
+from shapely.geometry import Point, shape
+from shapely.lib import Geometry
+from shapely.ops import transform as shapely_transform
 
 
 def parse_dms(dms: str) -> float:
@@ -84,7 +84,7 @@ ENFIELD_DMS_CORNERS: list[Corner] = [
 ]
 
 
-def load_enfield_geometry(geojson_path: Path):
+def load_enfield_geometry(geojson_path: Path) -> Geometry:
     """Load Enfield boundary geometry (admin_level=8) from Overpass GeoJSON."""
     with open(geojson_path) as f:
         data = json.load(f)
@@ -107,9 +107,10 @@ def load_enfield_geometry(geojson_path: Path):
     return geom
 
 
-def iter_boundary_vertices(geom) -> Iterable[Tuple[float, float]]:
+def iter_boundary_vertices(geom: Geometry) -> Iterable[tuple[float, float]]:
     """Yield all boundary vertex coordinates (lon, lat) from polygon/multipolygon."""
-    def _iter_coords(g):
+
+    def _iter_coords(g: Geometry) -> Iterable[tuple[float, float]]:
         if g.geom_type == "Polygon":
             for ring in [g.exterior, *g.interiors]:
                 for x, y in ring.coords:
@@ -124,7 +125,7 @@ def iter_boundary_vertices(geom) -> Iterable[Tuple[float, float]]:
     yield from _iter_coords(geom)
 
 
-def main():
+def main() -> None:
     repo_root = Path(__file__).resolve().parent
     geojson_path = repo_root / "2025-10-09_nh-boundaries.geojson"
 
@@ -142,7 +143,8 @@ def main():
     # Precompute boundary vertices (WGS84) and project to UTM
     vertex_lon_lat = list(iter_boundary_vertices(enfield_geom_wgs84))
     vertex_points_utm = [
-        shapely_transform(to_utm.transform, Point(lon, lat)) for lon, lat in vertex_lon_lat
+        shapely_transform(to_utm.transform, Point(lon, lat))
+        for lon, lat in vertex_lon_lat
     ]
 
     # Build report rows
@@ -167,14 +169,15 @@ def main():
 
         # Nearest vertex
         # Compute minimal distance to the set of vertex points in UTM
-        min_idx = None
-        min_dist = math.inf
-        for idx, vp_utm in enumerate(vertex_points_utm):
-            d = corner_pt_utm.distance(vp_utm)
-            if d < min_dist:
-                min_dist = d
-                min_idx = idx
-        nearest_vertex_lon, nearest_vertex_lat = vertex_lon_lat[min_idx]
+        if not vertex_points_utm:
+            raise RuntimeError("No boundary vertices found for Enfield geometry")
+
+        nearest_idx, nearest_point_utm = min(
+            enumerate(vertex_points_utm),
+            key=lambda item: corner_pt_utm.distance(item[1]),
+        )
+        nearest_vertex_lon, nearest_vertex_lat = vertex_lon_lat[nearest_idx]
+        min_dist = corner_pt_utm.distance(nearest_point_utm)
 
         rows.append(
             {
@@ -219,10 +222,8 @@ def main():
 
     # Write files
     out_json = repo_root / "enfield_corner_inaccuracy.json"
-    out_json.write_text(json.dumps(df.to_dicts(), indent=2))
+    out_json.write_text(json.dumps(df.to_dicts(), indent=2) + "\n")
 
 
 if __name__ == "__main__":
     main()
-
-

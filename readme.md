@@ -38,3 +38,8 @@ This extracts 234 NH municipalities (admin_level=8 relations) from the raw Overp
 ## Note to AI
 
 Using uv for environment management, polars for dataframes, shapely for geometry. Python 3.14.
+
+
+## References
+
+- [A History of Enfield Town Lines: From 1761 To 2007](https://www.enfieldnh.gov/media/7556) by Kurt Gotthardt from 2010

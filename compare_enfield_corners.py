@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import json
 import math
-import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Tuple
@@ -23,77 +22,47 @@ import polars as pl
 from shapely.geometry import Point, shape
 from shapely.ops import transform as shapely_transform
 from pyproj import Transformer
+from pygeodesy import dms as dms_mod
 
 
 # --- Input: Surveyed DMS corners from README ---
 ENFIELD_DMS_CORNERS = [
     (
         "Enfield–Lebanon–Plainfield (SW corner)",
-        "43° 35′ 6.94″ N",
-        "72° 12′ 29.39″ W",
+        "43° 35' 6.94\" N",
+        "72° 12' 29.39\" W",
     ),
     (
         "Enfield–Grantham–Plainfield (W corner)",
-        "43° 34′ 24.63″ N",
-        "72° 10′ 10.94″ W",
+        "43° 34' 24.63\" N",
+        "72° 10' 10.94\" W",
     ),
     (
         "Enfield–Springfield–Grantham (S corner)",
-        "43° 31′ 42.97″ N",
-        "72° 05′ 28.03″ W",
+        "43° 31' 42.97\" N",
+        "72° 05' 28.03\" W",
     ),
     (
         "Enfield–Grafton–Springfield (SE corner)",
-        "43° 33′ 10.60″ N",
-        "72° 04′ 11.68″ W",
+        "43° 33' 10.60\" N",
+        "72° 04' 11.68\" W",
     ),
     (
         "Enfield–Canaan–Grafton (NE corner)",
-        "43° 36′ 40.96″ N",
-        "72° 01′ 11.71″ W",
+        "43° 36' 40.96\" N",
+        "72° 01' 11.71\" W",
     ),
     (
         "Enfield–Lebanon–Hanover–Canaan (NW corner, Moose Mountain)",
-        "43° 39′ 32.72″ N",
-        "72° 09′ 43.23″ W",
+        "43° 39' 32.72\" N",
+        "72° 09' 43.23\" W",
     ),
 ]
 
 
 def parse_dms(dms: str) -> float:
-    """Parse a DMS coordinate string to decimal degrees.
-
-    Accepts variants using ASCII or Unicode symbols for degree, minute, second.
-    Examples: "43° 35′ 6.94″ N", "72° 12' 29.39\" W"
-    """
-    s = (
-        dms.strip()
-        .replace("\u00b0", "°")  # ensure degree
-        .replace("\u2032", "'")  # prime to apostrophe
-        .replace("\u2033", '"')  # double prime to quote
-        .replace("’", "'")  # curly apostrophe
-        .replace("＂", '"')  # fullwidth quote
-    )
-    s = re.sub(r"[\s\u00A0]+", " ", s)  # collapse spaces incl. non-breaking
-    s = s.rstrip(".,;")
-
-    # Extract components
-    m = re.search(
-        r'(?P<deg>\d+)\s*[°]?\s*(?P<min>\d+)\s*[\'′]?\s*(?P<sec>\d+(?:\.\d+)?)\s*[\"]?\s*(?P<hem>[NSEW])',
-        s,
-        re.IGNORECASE,
-    )
-    if not m:
-        raise ValueError(f"Cannot parse DMS: {dms}")
-    deg = float(m.group("deg"))
-    minutes = float(m.group("min"))
-    seconds = float(m.group("sec"))
-    hem = m.group("hem").upper()
-
-    decimal = deg + minutes / 60.0 + seconds / 3600.0
-    if hem in ("S", "W"):
-        decimal *= -1.0
-    return decimal
+    """Parse DMS to decimal degrees using pygeodesy (expects ASCII ' and ")."""
+    return float(dms_mod.parseDMS(dms.strip()))
 
 
 @dataclass(frozen=True)
@@ -226,17 +195,15 @@ def main():
 
     df = pl.DataFrame(rows)
     df = df.select(
-        [
-            "corner_name",
-            "lat",
-            "lon",
-            "nearest_boundary_lat",
-            "nearest_boundary_lon",
-            "distance_to_boundary_m",
-            "nearest_vertex_lat",
-            "nearest_vertex_lon",
-            "distance_to_vertex_m",
-        ]
+        "corner_name",
+        "lat",
+        "lon",
+        "nearest_boundary_lat",
+        "nearest_boundary_lon",
+        "distance_to_boundary_m",
+        "nearest_vertex_lat",
+        "nearest_vertex_lon",
+        "distance_to_vertex_m",
     )
 
     # Display concise table

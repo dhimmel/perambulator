@@ -7,6 +7,7 @@ import polars as pl
 from shapely.geometry import shape
 from shapely.ops import transform
 from pyproj import Transformer
+from pint import UnitRegistry
 
 
 def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
@@ -16,7 +17,8 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
     
     # Equal-area projection for contiguous US; outputs meters
     transformer = Transformer.from_crs("EPSG:4326", "EPSG:5070", always_xy=True)
-    SQ_METERS_PER_SQ_MILE = 2_589_988.110336
+    ureg = UnitRegistry()
+    meters_squared_to_miles_squared = (1 * (ureg.meter ** 2)).to(ureg.mile ** 2).magnitude
 
     rows = []
     for feature in data["features"]:
@@ -33,7 +35,7 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
             "wikidata": props.get("wikidata"),
             "wikipedia": props.get("wikipedia"),
             "area_sq_meters": area_sq_meters,
-            "area_sq_miles": area_sq_meters / SQ_METERS_PER_SQ_MILE,
+            "area_sq_miles": area_sq_meters * meters_squared_to_miles_squared,
             "coordinates": feature["geometry"]["coordinates"],
         }
         rows.append(row)

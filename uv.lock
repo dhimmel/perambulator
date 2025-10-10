@@ -38,7 +38,7 @@ wheels = [
 [[package]]
 name = "nh-boundaries"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "pint" },
     { name = "polars" },

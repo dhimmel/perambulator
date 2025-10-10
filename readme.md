@@ -25,8 +25,16 @@ out ids tags geom;   // relation centroids + full polygon geometry
 out geom;
 ```
 
-Next we want to make a tabular data structure with one row per town that includes the town's ids, name, area, and list of coordinates.
+## Usage
+
+Parse the GeoJSON data:
+
+```bash
+uv run python parse_boundaries.py
+```
+
+This extracts 234 NH municipalities (admin_level=8 relations) from the raw Overpass data and outputs to `nh_municipalities.json`.
 
 ## Note to AI
 
-Let's use uv for the environment, polars for dataframes unless we need to use something else for geojson. Python 3.14.
+Using uv for environment management, polars for dataframes, shapely for geometry. Python 3.14.

@@ -127,22 +127,25 @@ def load_enfield_geometry(geojson_path: Path) -> Geometry:
     return geom
 
 
-def iter_boundary_vertices(geom: Geometry) -> Iterable[tuple[float, float]]:
-    """Yield all boundary vertex coordinates (lon, lat) from polygon/multipolygon."""
+def get_boundary_vertices(geom: Geometry) -> list[tuple[float, float]]:
+    """Return all boundary vertex coordinates (lon, lat) as a list."""
 
-    def _iter_coords(g: Geometry) -> Iterable[tuple[float, float]]:
+    vertices: list[tuple[float, float]] = []
+
+    def _collect_coords(g: Geometry) -> None:
         if g.geom_type == "Polygon":
             for ring in [g.exterior, *g.interiors]:
                 for x, y in ring.coords:
-                    yield (x, y)
+                    vertices.append((x, y))
         elif g.geom_type == "MultiPolygon":
             for poly in g.geoms:
-                yield from _iter_coords(poly)
+                _collect_coords(poly)
         else:
             for x, y in g.coords:
-                yield (x, y)
+                vertices.append((x, y))
 
-    yield from _iter_coords(geom)
+    _collect_coords(geom)
+    return vertices
 
 
 def iter_boundary_lines(geom: Geometry) -> Iterable[Iterable[tuple[float, float]]]:
@@ -178,7 +181,7 @@ def main() -> None:
     boundary_utm = shapely_transform(to_utm.transform, boundary_wgs84)
 
     # Precompute boundary vertices (WGS84) and project to UTM
-    vertex_lon_lat = list(iter_boundary_vertices(enfield_geom_wgs84))
+    vertex_lon_lat = get_boundary_vertices(enfield_geom_wgs84)
     vertex_points_utm = [
         shapely_transform(to_utm.transform, Point(lon, lat))
         for lon, lat in vertex_lon_lat

@@ -27,7 +27,8 @@ out body;
 Parse the GeoJSON data:
 
 ```bash
-uv run python parse_boundaries.py
+uv run python 01_parse_boundaries.py
+uv run python 02_compare_enfield_corners.py
 ```
 
 This extracts 234 NH municipalities (admin_level=8 relations) from the raw Overpass data and outputs to `nh_municipalities.json`.

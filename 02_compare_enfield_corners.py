@@ -25,41 +25,6 @@ from pyproj import Transformer
 from pygeodesy import dms as dms_mod
 
 
-# --- Input: Surveyed DMS corners from README ---
-ENFIELD_DMS_CORNERS = [
-    (
-        "Enfield–Lebanon–Plainfield (SW corner)",
-        "43° 35' 6.94\" N",
-        "72° 12' 29.39\" W",
-    ),
-    (
-        "Enfield–Grantham–Plainfield (W corner)",
-        "43° 34' 24.63\" N",
-        "72° 10' 10.94\" W",
-    ),
-    (
-        "Enfield–Springfield–Grantham (S corner)",
-        "43° 31' 42.97\" N",
-        "72° 05' 28.03\" W",
-    ),
-    (
-        "Enfield–Grafton–Springfield (SE corner)",
-        "43° 33' 10.60\" N",
-        "72° 04' 11.68\" W",
-    ),
-    (
-        "Enfield–Canaan–Grafton (NE corner)",
-        "43° 36' 40.96\" N",
-        "72° 01' 11.71\" W",
-    ),
-    (
-        "Enfield–Lebanon–Hanover–Canaan (NW corner, Moose Mountain)",
-        "43° 39' 32.72\" N",
-        "72° 09' 43.23\" W",
-    ),
-]
-
-
 def parse_dms(dms: str) -> float:
     """Parse DMS to decimal degrees using pygeodesy (expects ASCII ' and ")."""
     return float(dms_mod.parseDMS(dms.strip()))
@@ -82,6 +47,41 @@ class Corner:
     @property
     def point_wgs84(self) -> Point:
         return Point(self.lon, self.lat)
+
+
+"""Input: Surveyed DMS corners from README."""
+ENFIELD_DMS_CORNERS: list[Corner] = [
+    Corner(
+        name="Enfield–Lebanon–Plainfield (SW corner)",
+        lat_dms="43° 35' 6.94\" N",
+        lon_dms="72° 12' 29.39\" W",
+    ),
+    Corner(
+        name="Enfield–Grantham–Plainfield (W corner)",
+        lat_dms="43° 34' 24.63\" N",
+        lon_dms="72° 10' 10.94\" W",
+    ),
+    Corner(
+        name="Enfield–Springfield–Grantham (S corner)",
+        lat_dms="43° 31' 42.97\" N",
+        lon_dms="72° 05' 28.03\" W",
+    ),
+    Corner(
+        name="Enfield–Grafton–Springfield (SE corner)",
+        lat_dms="43° 33' 10.60\" N",
+        lon_dms="72° 04' 11.68\" W",
+    ),
+    Corner(
+        name="Enfield–Canaan–Grafton (NE corner)",
+        lat_dms="43° 36' 40.96\" N",
+        lon_dms="72° 01' 11.71\" W",
+    ),
+    Corner(
+        name="Enfield–Lebanon–Hanover–Canaan (NW corner, Moose Mountain)",
+        lat_dms="43° 39' 32.72\" N",
+        lon_dms="72° 09' 43.23\" W",
+    ),
+]
 
 
 def load_enfield_geometry(geojson_path: Path):
@@ -147,8 +147,7 @@ def main():
 
     # Build report rows
     rows = []
-    for name, lat_dms, lon_dms in ENFIELD_DMS_CORNERS:
-        c = Corner(name=name, lat_dms=lat_dms, lon_dms=lon_dms)
+    for c in ENFIELD_DMS_CORNERS:
         corner_pt_wgs84 = c.point_wgs84
         corner_pt_utm = shapely_transform(to_utm.transform, corner_pt_wgs84)
 

@@ -55,8 +55,8 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
     
     # Filter to admin_level=8 (towns/cities) that are relations with names
     municipalities = df.filter(
-        (pl.col("admin_level") == "8") & 
-        (pl.col("name").is_not_null()) &
+        (pl.col("admin_level") == "8") .filter 
+        (pl.col("name").is_not_null()) .filter
         (pl.col("relation_id").str.contains("^relation/"))
     )
     

@@ -23,7 +23,18 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
     rows = []
     for feature in data["features"]:
         props = feature["properties"]
-        geom = shape(feature["geometry"])  # lon/lat (EPSG:4326)
+
+        # Skip bbox-only and non-surface geometries (we only want true boundaries)
+        if props.get("@geometry") == "bounds":
+            continue
+        geom_obj = feature.get("geometry")
+        if not geom_obj:
+            continue
+        geom_type = geom_obj.get("type")
+        if geom_type not in ("Polygon", "MultiPolygon"):
+            continue
+
+        geom = shape(geom_obj)  # lon/lat (EPSG:4326)
         geom_equal_area = transform(transformer.transform, geom)
         area_sq_meters = geom_equal_area.area
         
@@ -36,7 +47,7 @@ def parse_geojson_to_municipalities(geojson_path: Path) -> pl.DataFrame:
             "wikipedia": props.get("wikipedia"),
             "area_sq_meters": area_sq_meters,
             "area_sq_miles": area_sq_meters * meters_squared_to_miles_squared,
-            "coordinates": feature["geometry"]["coordinates"],
+            "coordinates": geom_obj["coordinates"],
         }
         rows.append(row)
     

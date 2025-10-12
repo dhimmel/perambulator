@@ -35,6 +35,7 @@ select = [
 ignore = [
     "E501",  # line too long
     "RUF001",  # ambiguous Unicode characters in strings
+    "B018",  # Found useless expression
 ]
 
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file

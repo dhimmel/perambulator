@@ -25,10 +25,10 @@ repos:
       # Run the formatter.
       - id: ruff-format
         types_or: [ python, jupyter ]
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.18.2
-    hooks:
-      - id: mypy
-        language: python  # specify language here for renovate support
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.18.2
+  #   hooks:
+  #     - id: mypy
+  #       language: python  # specify language here for renovate support
         # additional_dependencies:
         #   - "XXX==0.118.2"

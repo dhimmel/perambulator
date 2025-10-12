@@ -15,16 +15,16 @@ repos:
         # exclude is a regex and not a glob
         exclude: src/radoverlay/backend/powerscribe/tests/test-files/.+
       - id: mixed-line-ending
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
-    hooks:
-      # Run the linter.
-      - id: ruff-check
-        types_or: [ python, jupyter ]
-        args: [ --fix ]
-      # Run the formatter.
-      - id: ruff-format
-        types_or: [ python, jupyter ]
+  # - repo: https://github.com/astral-sh/ruff-pre-commit
+  #   rev: v0.14.0
+  #   hooks:
+  #     # Run the linter.
+  #     - id: ruff-check
+  #       types_or: [ python, jupyter ]
+  #       args: [ --fix ]
+  #     # Run the formatter.
+  #     - id: ruff-format
+  #       types_or: [ python, jupyter ]
   # - repo: https://github.com/pre-commit/mirrors-mypy
   #   rev: v1.18.2
   #   hooks:

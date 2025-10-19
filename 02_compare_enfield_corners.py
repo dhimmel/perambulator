@@ -24,7 +24,6 @@ def _(mo):
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -42,7 +41,6 @@ def _():
     from shapely.geometry import Point, shape
     from shapely.lib import Geometry
     from shapely.ops import transform as shapely_transform
-
     return (
         Geometry,
         Iterable,
@@ -65,6 +63,7 @@ def _(Point, dataclass, dms_mod):
         """Parse DMS to decimal degrees using pygeodesy (expects ASCII ' and ")."""
         return float(dms_mod.parseDMS(dms.strip()))
 
+
     @dataclass(frozen=True)
     class Corner:
         name: str
@@ -84,6 +83,8 @@ def _(Point, dataclass, dms_mod):
         def point_wgs84(self) -> Point:
             return Point(self.lon, self.lat)
 
+        def __str__(self) -> str:
+            return f"{self.name}:\nlat={self.lat},lon={self.lon})"
     return (Corner,)
 
 
@@ -140,6 +141,8 @@ def _(Corner):
             page=92,
         ),
     ]
+    for _corner in ENFIELD_DMS_CORNERS:
+        print(_corner)
     return (ENFIELD_DMS_CORNERS,)
 
 
@@ -167,6 +170,7 @@ def _(Geometry, Iterable, Path, json, shape):
         geom = shape(enfield_feature["geometry"])  # lon/lat EPSG:4326
         return geom
 
+
     def get_boundary_vertices(geom: Geometry) -> list[tuple[float, float]]:
         """Return all boundary vertex coordinates (lon, lat) as a list."""
 
@@ -186,6 +190,7 @@ def _(Geometry, Iterable, Path, json, shape):
 
         _collect_coords(geom)
         return vertices
+
 
     def iter_boundary_lines(geom: Geometry) -> Iterable[Iterable[tuple[float, float]]]:
         """Yield each boundary line as a sequence of (lon, lat) coordinates."""
@@ -310,27 +315,21 @@ def _(
     df = pl.DataFrame(rows)
     df = df.select(
         "corner_name",
+        "distance_to_vertex_m",
+        "distance_to_boundary_m",
         "lat",
         "lon",
         "nearest_boundary_lat",
         "nearest_boundary_lon",
-        "distance_to_boundary_m",
         "nearest_vertex_lat",
         "nearest_vertex_lon",
-        "distance_to_vertex_m",
     )
 
     # Write files
     out_json = repo_root / "enfield_corner_inaccuracy.json"
     out_json.write_text(json.dumps(df.to_dicts(), indent=2) + "\n")
 
-    df.with_columns(pl.selectors.numeric().round(5))
-    return
-
-
-@app.cell
-def _(enfield_geom_wgs84):
-    enfield_geom_wgs84
+    df.with_columns(pl.selectors.numeric().round(7))
     return
 
 
@@ -346,9 +345,7 @@ def _(
     _rows = []
     for _path_id, coords in enumerate(iter_boundary_lines(enfield_geom_wgs84)):
         for order, (x, y) in enumerate(coords):
-            _rows.append(
-                {"lon": x, "lat": y, "order": order, "source": "OpenStreetMap"}
-            )
+            _rows.append({"lon": x, "lat": y, "order": order, "source": "OpenStreetMap"})
 
     # Build surveyed polygon path (ordered by angle and closed)
     survey_loop = ENFIELD_DMS_CORNERS.copy()
@@ -357,11 +354,10 @@ def _(
         survey_loop = [*survey_loop, survey_loop[0]]
 
     for i, corner in enumerate(survey_loop):
-        _rows.append(
-            {"lon": corner.lon, "lat": corner.lat, "order": i, "source": "Survey"}
-        )
+        _rows.append({"lon": corner.lon, "lat": corner.lat, "order": i, "source": "Survey"})
 
     coord_df = pl.DataFrame(_rows).sort(["order"])
+    coord_df
     return (coord_df,)
 
 
@@ -374,7 +370,7 @@ def _(coord_df, pn):
             size=0.7,
             alpha=0.4,
         )
-        + pn.geom_point(size=2, alpha=0.5, fill="none")
+        + pn.geom_point(size=2, alpha=0.5, fill='none')
         + pn.coord_equal()
         + pn.theme_void()
         + pn.labs(title="Enfield boundary: OSM vs. surveyed corners")
@@ -389,16 +385,11 @@ def _(p, repo_root):
     # Save figure
     p.save(
         filename=repo_root.joinpath("enfield_osm_vs_survey.svg"),
-        width=6,
-        height=4,
-        units="in",
+        width=6, height=4, units="in",
     )
     p.save(
         filename=repo_root.joinpath("enfield_osm_vs_survey.png"),
-        width=6,
-        height=4,
-        units="in",
-        dpi=300,
+        width=6, height=4, units="in", dpi=300
     )
     return
 

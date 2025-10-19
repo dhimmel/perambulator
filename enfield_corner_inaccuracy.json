@@ -1,90 +1,90 @@
 [
   {
     "corner_name": "Enfield\u2013Lebanon\u2013Plainfield (SW corner)",
+    "distance_to_vertex_m": 11.121550713885336,
+    "distance_to_boundary_m": 6.08460854357551,
     "lat": 43.58526111111111,
     "lon": -72.20816388888889,
     "nearest_boundary_lat": 43.585237733276216,
     "nearest_boundary_lon": -72.20809579425747,
-    "distance_to_boundary_m": 6.08460854357551,
     "nearest_vertex_lat": 43.585162,
-    "nearest_vertex_lon": -72.208145,
-    "distance_to_vertex_m": 11.121550713885336
+    "nearest_vertex_lon": -72.208145
   },
   {
     "corner_name": "Enfield\u2013Grantham\u2013Plainfield (W corner)",
+    "distance_to_vertex_m": 131.0777543752739,
+    "distance_to_boundary_m": 4.734418389982838,
     "lat": 43.573508333333336,
     "lon": -72.16970555555555,
     "nearest_boundary_lat": 43.57354731250331,
     "nearest_boundary_lon": -72.16968193288939,
-    "distance_to_boundary_m": 4.734418389982838,
     "nearest_vertex_lat": 43.5740225,
-    "nearest_vertex_lon": -72.1711653,
-    "distance_to_vertex_m": 131.0777543752739
+    "nearest_vertex_lon": -72.1711653
   },
   {
     "corner_name": "Enfield\u2013Grantham",
+    "distance_to_vertex_m": 17.291651911937542,
+    "distance_to_boundary_m": 5.3106001651671955,
     "lat": 43.55338611111111,
     "lon": -72.10657777777777,
     "nearest_boundary_lat": 43.553360234321595,
     "nearest_boundary_lon": -72.10652254999736,
-    "distance_to_boundary_m": 5.3106001651671955,
     "nearest_vertex_lat": 43.5534847,
-    "nearest_vertex_lon": -72.1064123,
-    "distance_to_vertex_m": 17.291651911937542
+    "nearest_vertex_lon": -72.1064123
   },
   {
     "corner_name": "Enfield\u2013Grantham",
+    "distance_to_vertex_m": 15.60099823358708,
+    "distance_to_boundary_m": 11.554234375016973,
     "lat": 43.538405555555556,
     "lon": -72.1202888888889,
     "nearest_boundary_lat": 43.53834734106475,
     "nearest_boundary_lon": -72.12017049793245,
-    "distance_to_boundary_m": 11.554234375016973,
     "nearest_vertex_lat": 43.5382692,
-    "nearest_vertex_lon": -72.1202431,
-    "distance_to_vertex_m": 15.60099823358708
+    "nearest_vertex_lon": -72.1202431
   },
   {
     "corner_name": "Enfield\u2013Springfield\u2013Grantham (S corner)",
+    "distance_to_vertex_m": 28.45019058676233,
+    "distance_to_boundary_m": 27.654566366097765,
     "lat": 43.52860277777778,
     "lon": -72.09111944444444,
     "nearest_boundary_lat": 43.528832370039005,
     "nearest_boundary_lon": -72.09098763481923,
-    "distance_to_boundary_m": 27.654566366097765,
     "nearest_vertex_lat": 43.5288092,
-    "nearest_vertex_lon": -72.0909114,
-    "distance_to_vertex_m": 28.45019058676233
+    "nearest_vertex_lon": -72.0909114
   },
   {
     "corner_name": "Enfield\u2013Grafton\u2013Springfield (SE corner)",
+    "distance_to_vertex_m": 43.37622214483718,
+    "distance_to_boundary_m": 13.748497048326952,
     "lat": 43.55294444444444,
     "lon": -72.06991111111111,
     "nearest_boundary_lat": 43.55287782139519,
     "nearest_boundary_lon": -72.06976780511944,
-    "distance_to_boundary_m": 13.748497048326952,
     "nearest_vertex_lat": 43.5531897,
-    "nearest_vertex_lon": -72.0694937,
-    "distance_to_vertex_m": 43.37622214483718
+    "nearest_vertex_lon": -72.0694937
   },
   {
     "corner_name": "Enfield\u2013Canaan\u2013Grafton (NE corner)",
+    "distance_to_vertex_m": 14.278032091843494,
+    "distance_to_boundary_m": 14.278032091843494,
     "lat": 43.611377777777776,
     "lon": -72.01991944444444,
     "nearest_boundary_lat": 43.6113809,
     "nearest_boundary_lon": -72.02009620000001,
-    "distance_to_boundary_m": 14.278032091843494,
     "nearest_vertex_lat": 43.6113809,
-    "nearest_vertex_lon": -72.0200962,
-    "distance_to_vertex_m": 14.278032091843494
+    "nearest_vertex_lon": -72.0200962
   },
   {
     "corner_name": "Enfield\u2013Lebanon\u2013Hanover\u2013Canaan (NW corner, Moose Mountain)",
+    "distance_to_vertex_m": 143.25568628733882,
+    "distance_to_boundary_m": 142.83152989704567,
     "lat": 43.65908888888889,
     "lon": -72.16200833333333,
     "nearest_boundary_lat": 43.6585395074796,
     "nearest_boundary_lon": -72.16040826117556,
-    "distance_to_boundary_m": 142.83152989704567,
     "nearest_vertex_lat": 43.6586291,
-    "nearest_vertex_lon": -72.1603499,
-    "distance_to_vertex_m": 143.25568628733882
+    "nearest_vertex_lon": -72.1603499
   }
 ]

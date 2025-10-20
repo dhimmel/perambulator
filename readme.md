@@ -33,9 +33,13 @@ pre-commit install
 
 ## Usage
 
+```shell
+marimo edit
+```
+
 Parse the GeoJSON data:
 
-```bash
+```shell
 uv run python 01_parse_boundaries.py
 uv run python 02_compare_enfield_corners.py
 ```

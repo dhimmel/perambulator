@@ -3,7 +3,7 @@ name = "nh-boundaries"
 version = "0.1.0"
 description = "Analysis of New Hampshire town boundaries"
 # upgrade to 3.14 when more prebuilt wheels are available
-requires-python = "==3.13"
+requires-python = "==3.13.*"
 dependencies = [
     "marimo>=0.16.5",
     "pint>=0.25",

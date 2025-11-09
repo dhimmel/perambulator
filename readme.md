@@ -50,7 +50,6 @@ This extracts 234 NH municipalities (admin_level=8 relations) from the raw Overp
 
 Using uv for environment management, polars for dataframes, shapely for geometry. Python 3.14.
 
-
 ## References
 
 - https://www.openstreetmap.org/relation/2027182
